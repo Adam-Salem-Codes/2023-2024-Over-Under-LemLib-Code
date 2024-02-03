@@ -24,3 +24,5 @@
 ## You can open and edit the paths with [Jerryio](https://path.jerryio.com)
 
 # This is also annotated with comments throughout the code.
+
+# Quick note: The only includes that are provided are includes that were modified or specific to this project. I will not be providing PROS, LemLib, or Okapi in this repository. Use the included links to get the dependencies.
