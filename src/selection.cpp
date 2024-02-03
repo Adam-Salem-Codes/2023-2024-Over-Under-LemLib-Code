@@ -3,12 +3,12 @@
 using namespace pros;
 using namespace std;
 // Modified... original credit: https://github.com/kunwarsahni01/Vex-Autonomous-Selector
+lv_obj_t *x, *y, *orientation;
+
 namespace selector
 {
 
-	lv_res_t switchhandle1(lv_obj_t *s);
-	lv_res_t switchhandle2(lv_obj_t *s);
-	lv_res_t switchhandle3(lv_obj_t *s);
+
 	int auton;
 	int autonCount;
 	const char *btnmMap[] = {"", "", "", "", "", "", "", "", "", "", ""}; // up to 10 autons
@@ -82,6 +82,7 @@ namespace selector
 				{
 					auton = 0;
 				}
+				lv_label_set_text(x, to_string(round(chassis.getPose().x)).c_str());
 			}
 
 			pros::delay(20);
@@ -106,13 +107,15 @@ namespace selector
 		// create a tab view object
 		tabview = lv_tabview_create(lv_scr_act(), NULL);
 		lv_tabview_set_anim_time(tabview, 500);
-
 		// add 3 tabs (the tabs are page (lv_page) and can be scrolled
 		lv_obj_t *redTab = lv_tabview_add_tab(tabview, "Red");
 		lv_obj_t *blueTab = lv_tabview_add_tab(tabview, "Blue");
 		lv_obj_t *skillsTab = lv_tabview_add_tab(tabview, "Skills");
 		
-		lv_obj_t *pneumatics = lv_tabview_add_tab(tabview, "Pneumatics");
+		lv_obj_t *odomTab = lv_tabview_add_tab(tabview, "Odometry");
+		x = lv_label_create(odomTab, NULL);
+		y = lv_label_create(odomTab, NULL);
+		orientation = lv_label_create(odomTab, NULL);
 		// set default tab
 		if (auton < 0)
 		{
@@ -152,34 +155,7 @@ namespace selector
 		lv_obj_set_size(skillsBtn, 450, 50);
 		lv_obj_set_pos(skillsBtn, 0, 100);
 		
-		lv_obj_t *cylinder1 = lv_sw_create(pneumatics, NULL);
-		lv_sw_set_action(cylinder1, switchhandle1);
-		lv_obj_align(cylinder1, pneumatics, LV_ALIGN_IN_TOP_MID, 0, 10);
-
-		lv_obj_t *cylinder2 = lv_sw_create(pneumatics, NULL);
-		lv_sw_set_action(cylinder2, switchhandle2);
-		lv_obj_align(cylinder2, pneumatics, LV_ALIGN_CENTER, 0, 20);
-
-		lv_obj_t *cylinder3 = lv_sw_create(pneumatics, NULL);
-		lv_sw_set_action(cylinder3, switchhandle3);
-		lv_obj_align(cylinder3, pneumatics, LV_ALIGN_IN_BOTTOM_MID, 0, 20);
-
 		// start tab watcher
 		pros::Task tabWatcher_task(tabWatcher);
-	}
-	lv_res_t switchhandle1(lv_obj_t *s){
-		ADIDigitalOut p ('A');
-		p.set_value(lv_sw_get_state(s));
-		return LV_RES_OK;
-	}
-		lv_res_t switchhandle2(lv_obj_t *s){
-		ADIDigitalOut p ('B');
-		p.set_value(lv_sw_get_state(s));
-		return LV_RES_OK;
-	}
-		lv_res_t switchhandle3(lv_obj_t *s){
-		ADIDigitalOut p ('C');
-		p.set_value(lv_sw_get_state(s));
-		return LV_RES_OK;
 	}
 } // namespace selector
